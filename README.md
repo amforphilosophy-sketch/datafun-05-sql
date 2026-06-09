@@ -159,28 +159,33 @@ You accidentally started Python interactive mode.
 It happens.
 Press `Ctrl+c` (both keys together) or `Ctrl+Z` then `Enter` on Windows.
 
-## DuckDB Example Output (Replace This with Yours and Describe)
+## DuckDB Example Output and Modification
+
+### My Modification
+
+I added a new KPI query, **Total Revenue by Region**, alongside the instructor's revenue-by-store query. The original `case_retail_query_kpi_revenue.sql` reports revenue per individual store. My new query, `mohmand_retail_query_kpi_region.sql`, joins the store and sale tables, groups results with `GROUP BY s.region`, aggregates with `SUM`, `COUNT`, and `AVG`, and sorts by `total_revenue` descending. This rolls store-level data up to the regional level, which is useful for comparing overall regional performance rather than individual stores.
+
+### Run Command
 
 ```shell
-| INFO | P05 | RUN SQL query: C:\Repos\datafun\datafun-05-sql\sql\duckdb\case_retail_query_sales_by_category.sql
+uv run python -m datafun.app_retail_duckdb_mohmand
+```
+
+### My Output
+
+```shell
+| INFO | P05 | RUN SQL query: /Users/ahmadmohmand/Repos/datafun-05-sql/sql/duckdb/mohmand_retail_query_kpi_region.sql
 | INFO | P05 | ====================================
-| INFO | P05 | case_retail_query_sales_by_category.sql
+| INFO | P05 | mohmand_retail_query_kpi_region.sql
 | INFO | P05 | ====================================
-| INFO | P05 | product_category, sale_count, total_revenue, avg_sale_amount
-| INFO | P05 | Outdoors, 9, 3200.0, 355.56
-| INFO | P05 | Clothing, 10, 1375.0, 137.5
-| INFO | P05 | Food, 11, 652.0, 59.27
-| INFO | P05 |
-| INFO | P05 | RUN SQL query: C:\Repos\datafun\datafun-05-sql\sql\duckdb\case_retail_query_kpi_revenue.sql
+| INFO | P05 | region, sale_count, total_revenue, avg_sale_amount
+| INFO | P05 | North, 20, 3359.0, 167.95
+| INFO | P05 | South, 10, 1868.0, 186.8
 | INFO | P05 | ====================================
-| INFO | P05 | case_retail_query_kpi_revenue.sql
-| INFO | P05 | ====================================
-| INFO | P05 | store_id, store_name, city, region, sale_count, total_revenue, avg_sale_amount
-| INFO | P05 | S003, Central Plaza, Mankato, South, 10, 1868.0, 186.8
-| INFO | P05 | S001, North Market, Duluth, North, 10, 1834.0, 183.4
-| INFO | P05 | S002, Lakeside Shop, Ely, North, 10, 1525.0, 152.5
-| INFO | P05 | ========================
 | INFO | P05 | Executed successfully!
-| INFO | P05 | ========================
 | INFO | P05 | END main()
 ```
+
+### What I Observed
+
+North had double the sales volume of South (20 vs 10) and the higher total revenue ($3,359.00 vs $1,868.00). However, South had the higher average sale amount ($186.80 vs $167.95). Grouping by region surfaces this trade-off between volume and per-sale value, an insight that the store-level query alone does not make obvious.
