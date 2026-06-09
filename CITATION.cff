@@ -19,10 +19,12 @@ authors:
   - family-names: Case
     given-names: Denise M.
     orcid: "https://orcid.org/0000-0001-6165-7389"
-    affiliation: "Northwest Missouri State University, School of Computer Science and Information Systems, Maryville, MO, USA"
-
-repository-code: "https://github.com/denisecase/datafun-05-sql"
-url: "https://github.com/denisecase/datafun-05-sql"
+    affiliation: "Northwest Missouri State University, School of Computer Science and Information Systems"
+  - family-names: Mohmand
+    given-names: Ahmad Saleem
+    affiliation: "Student, Northwest Missouri State University"
+repository-code: "https://github.com/amforphilosophy-sketch/datafun-05-sql"
+url: "https://github.com/amforphilosophy-sketch/datafun-05-sql"
 license: MIT
 
 abstract: >
