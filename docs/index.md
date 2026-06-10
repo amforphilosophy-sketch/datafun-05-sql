@@ -21,44 +21,23 @@ to get these projects running on your machine.
    Not easy to read, but useful once you get used to it.
 - [**Module-specific**](./module/index.md)
 
-## Custom Project: Library Analytics (Phase 5)
 
-**Author:** Ahmad Saleem Mohmand
+## Custom Project
 
-For Phase 5, I applied the retail pipeline techniques to a new domain: a library system. The data models a one-to-many relationship where one branch has many checkouts, parallel to the retail store-to-sale relationship.
+### Dataset
 
-### What the project does
+I used the library domain. The dataset has two related tables. The branch table lists each library branch (branch_id, branch_name, city, system_name). The checkout table lists each item checkout (checkout_id, branch_id, material_type, duration_days, fine_amount, checkout_date). The relationship is one-to-many: one branch has many checkouts, linked by branch_id. This parallels the retail store-to-sale relationship from the example project.
 
-The pipeline reads two CSV files (branch.csv and checkout.csv) into a DuckDB database, then runs three analytics queries:
+### Phase 4 Initial Modifications
 
-1. Checkouts by branch - count and fine totals per branch
-2. Checkouts by material type - count and average loan duration per material type
-3. KPI: Checkouts by library system - totals rolled up by system_name
+For the initial technical modification, I added a new KPI query to the retail example, mohmand_retail_query_kpi_region.sql. The original query reported revenue per individual store. My query joined the store and sale tables, grouped results by region with GROUP BY, aggregated with SUM, COUNT, and AVG, and sorted by total revenue. I added one line to the Python script app_retail_duckdb_mohmand.py to run it, then ran the pipeline and confirmed it printed the region-grouped results and ended with Executed successfully, which verified the pipeline still ran.
 
-### How to run it
+### Phase 5 Custom Project
 
-```shell
+For the custom project I built a complete library pipeline. I created five SQL files in sql/duckdb: library_clean.sql, library_bootstrap.sql, library_query_checkouts_by_branch.sql, library_query_checkouts_by_material.sql, and library_query_kpi_system.sql. I wrote a Python orchestration script, app_library_duckdb_mohmand.py, that cleans, bootstraps, loads the CSV data, and runs the three queries. Running it generates the database artifacts/duckdb/library.duckdb.
+
+Run command:
+
 uv run python -m datafun.app_library_duckdb_mohmand
-```
 
-### Key results
-
-Checkouts by library system (KPI):
-
-| system_name | checkout_count | total_fines | avg_fine |
-|---|---|---|---|
-| Arrowhead Library System | 20 | 11.50 | 0.575 |
-| Regional Library Network | 10 | 8.00 | 0.80 |
-
-Checkouts by material type:
-
-| material_type | checkout_count | avg_duration_days | total_fines |
-|---|---|---|---|
-| Book | 9 | 19.4 | 0.00 |
-| DVD | 8 | 9.6 | 15.25 |
-| Magazine | 7 | 7.0 | 4.25 |
-| Ebook | 6 | 21.0 | 0.00 |
-
-### Insights
-
-The most striking finding was that DVDs generated almost all of the library's fines (15.25 of the total) despite having the shortest average loan period at 9.6 days. By contrast, Books and Ebooks, which had the longest loan periods, generated zero fines. This suggests patrons reliably return long-form reading materials on time but frequently incur late fees on short-loan media like DVDs. At the system level, Arrowhead Library System handled double the checkout volume of Regional Library Network, but Regional had the higher average fine per checkout, a volume-versus-value contrast similar to the one observed in the retail example.
+One interesting result came from the checkouts-by-material query. DVDs generated almost all of the library's fines (15.25 of the total) despite having the shortest average loan period at 9.6 days, while Books and Ebooks, which had the longest loan periods, generated zero fines. This suggests patrons reliably return long-form reading materials on time but frequently incur late fees on short-loan media like DVDs.
